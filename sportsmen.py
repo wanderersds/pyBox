@@ -7,6 +7,12 @@ class sportsmen():
   def __init__(self, dataList):
     self.name, self.last_name, self.trainer, self.born, self.weight, self.category, self.club = dataList
     Sportsmens.append(self)
+    
+  def correct(self, dataList):
+    self.name, self.last_name, self.trainer, self.born, self.weight, self.category, self.club = dataList
+  
+  def remove(self):
+    Sportsmens.remove(self)
   
 class fight():
   a = ""
