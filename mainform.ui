@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>750</width>
+    <height>448</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Tab 1</string>
+      </attribute>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QTableWidget" name="tableWidget">
+           <property name="rowCount">
+            <number>1</number>
+           </property>
+           <row/>
+           <column>
+            <property name="text">
+             <string>Имя</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Фамилия</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Тренер</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Год</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Вес</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Категория</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Клуб</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_2">
+      <attribute name="title">
+       <string>Tab 2</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
