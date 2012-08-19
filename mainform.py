@@ -12,10 +12,23 @@ class MainForm(QtGui.QMainWindow):
     #self.connect(self.tableWidget, QtCore.SIGNAL("cellActivated(int, int)"), self.label, QtCore.SLOT("clear()")) 
     #Рабочий пример связи сигнала и метода на питоне!
     #self.connect(self.tableWidget, QtCore.SIGNAL("cellActivated(int, int)"), self.setLabelText)
-    self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowDiagram)
+    self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.sportsmenEdit)
-    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.newSportsmen)
-    first = sportsmen(self.rowToList(0))
+    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.autoAddRow)
+    
+    self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.plusButton)
+    self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.minusButton)
+    
+    sportsmen()
+    
+    
+  def plusButton(self):
+    self.addRow(self.tableWidget.currentRow())
+    
+  def minusButton(self): #Возможно отделение removeRow()
+    row = self.tableWidget.currentRow()
+    self.tableWidget.removeRow(row)
+    del Sportsmens[row]
     
   def getText(self, x, y):
     try:
@@ -39,12 +52,16 @@ class MainForm(QtGui.QMainWindow):
       rowList.append(self.getText(row, x))
     return(rowList)
   
-  def newSportsmen(self, i, j):
+  def autoAddRow(self, i):
     if self.rowIsFilled(i):
-      self.tableWidget.insertRow(self.tableWidget.rowCount())
-      tmp = sportsmen(self.rowToList(i+1))
-      
-  def drowDiagram(self):
-    print("drowDiagram")
-    #for i in self.tableWidget.rowCount():
-      #for j in self.tableWidget.columnCount():
+      self.addRow(i)
+  
+  def addRow(self, i):
+    self.tableWidget.insertRow(i+1)
+    sportsmen(pos = i+1)
+  
+  def drowTable(self):
+    self.tableWidget_pare.insertRow(0)
+    
+  def placeSportsmen(self, sportsmen, table, pos, side):
+    table.inser
