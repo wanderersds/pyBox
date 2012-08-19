@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-Sportsmens = list()
-
 class sportsmen():
-  def __init__(self, dataList = ["", "", "", "", "", "", ""], pos = len(Sportsmens)):
-    self.name, self.last_name, self.trainer, self.born, self.weight, self.category, self.club = dataList
-    Sportsmens.insert(pos, self)
+  #def __init__(self, dataList = ["", "", "", "", "", "", ""]):
+    #self.name, self.last_name, self.trainer, self.born, self.weight, self.category, self.club = dataList
   
   def correct(self, dataList):
     self.name, self.last_name, self.trainer, self.born, self.weight, self.category, self.club = dataList
