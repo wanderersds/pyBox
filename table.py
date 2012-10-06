@@ -48,14 +48,21 @@ class abstractTable():
     if pos == -1:
       pos = self.table.rowCount()
     self.table.insertRow(pos)
+    man["num"] = pos+1
     self.showSportsmen(pos, man)
     self.sportsmens.insert(pos, man)
+
+#    for i in len(self.sportsmens) - pos:
+#      self.sportsmens[i]["num"]+1
     
   def removeSportsmen(self):
     row = self.table.currentRow()
     if row > -1:
       self.table.removeRow(row)
       del self.sportsmens[row]
+
+    for i in len(self.sportsmens) - row:
+      self.sportsmens[i]["num"]-1
       
       
 class inputTable(abstractTable):
@@ -67,5 +74,11 @@ class pareTable(abstractTable):
     name.setText(sportsmen["name"])
     last_name = QtGui.QTableWidgetItem()
     last_name.setText(sportsmen["last_name"])
-    self.table.setItem(pos, 0, name)
-    self.table.setItem(pos, 1, last_name)
+
+    num = sportsmen["num"]
+    if num % 2:
+        self.table.setItem(num / 2, 0, name)
+        self.table.setItem(num / 2, 1, last_name)
+    else:
+        self.table.setItem(num / 2-1, 2, name)
+        self.table.setItem(num / 2-1, 3, last_name)

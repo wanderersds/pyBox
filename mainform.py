@@ -12,9 +12,9 @@ class MainForm(QtGui.QMainWindow):
     self.inputTable = inputTable(self.tableWidget)
     self.pareTable = pareTable(self.tableWidget_pare)
     
-    self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
+    #self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsmen)
-    
+    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.drowTable)
     self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsmen)
     self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsmen)
   
