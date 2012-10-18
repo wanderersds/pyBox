@@ -1,19 +1,19 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 from PyQt4 import QtGui
-from sportsmen import *
+from sportsman import *
 
 class abstractTable():
 
   def __init__(self, table):
     self.table = table
-    self.sportsmens = list()
+    self.sportsmans = list()
     if table.rowCount() == 0:
-      self.addSportsmen()
+      self.addSportsman()
   
   def clear(self):
     self.table.setRowCount(0)
-    del self.sportsmens[:]
+    del self.sportsmans[:]
   
   def getText(self, x, y):
     try:
@@ -33,52 +33,55 @@ class abstractTable():
       rowList.append(self.getText(row, x))
     return(rowList)
     
-  def showSportsmen(self, pos, sportsmen):
+  def showSportsman(self, pos, sportsman):
     pass
     
-  def editSportsmen(self, i, j):
-    self.sportsmens[i][keys[j]] = self.table.item(i, j).text()
-    print(self.sportsmens[i])
+  def editSportsman(self, i, j):
+    self.sportsmans[i][keys[j]] = self.table.item(i, j).text()
+    print(self.sportsmans[i])
     if self.rowIsFilled(i):
-      self.addSportsmen()
+      self.addSportsman()
       
-  def addSportsmen(self, man = -1, pos = -1): #NameError: name 'self' is not defined
+  def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
     if man == -1:
-      man = sportsmen() #FTW???
+      man = sportsman() #FTW???
     if pos == -1:
       pos = self.table.rowCount()
     self.table.insertRow(pos)
     man["num"] = pos+1
-    self.showSportsmen(pos, man)
-    self.sportsmens.insert(pos, man)
+    self.showSportsman(pos, man)
+    self.sportsmans.insert(pos, man)
 
-#    for i in len(self.sportsmens) - pos:
-#      self.sportsmens[i]["num"]+1
+#    for i in len(self.sportsmans) - pos:
+#      self.sportsmans[i]["num"]+1
     
-  def removeSportsmen(self):
+  def removeSportsman(self):
     row = self.table.currentRow()
     if row > -1:
       self.table.removeRow(row)
-      del self.sportsmens[row]
+      del self.sportsmans[row]
 
-    for i in len(self.sportsmens) - row:
-      self.sportsmens[i]["num"]-1
+    for i in self.sportsmans[row:]:
+      i["num"]-1
       
       
 class inputTable(abstractTable):
   pass
 
 class pareTable(abstractTable):
-  def showSportsmen(self, pos, sportsmen):
+  def showSportsman(self, pos, sportsman):
     name = QtGui.QTableWidgetItem()
-    name.setText(sportsmen["name"])
+    name.setText(sportsman["name"])
     last_name = QtGui.QTableWidgetItem()
-    last_name.setText(sportsmen["last_name"])
+    last_name.setText(sportsman["last_name"])
 
-    num = sportsmen["num"]
+    num = sportsman["num"]
     if num % 2:
         self.table.setItem(num / 2, 0, name)
         self.table.setItem(num / 2, 1, last_name)
     else:
-        self.table.setItem(num / 2-1, 2, name)
-        self.table.setItem(num / 2-1, 3, last_name)
+        self.table.setItem(num / 2 - 1, 2, name)
+        self.table.setItem(num / 2 - 1, 3, last_name)
+
+  def keyPressEvent(self, event):
+    print(event)

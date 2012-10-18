@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 from PyQt4 import QtCore, uic
-from sportsmen import *
+from sportsman import *
 from table import *
 
 class MainForm(QtGui.QMainWindow):
@@ -13,15 +13,15 @@ class MainForm(QtGui.QMainWindow):
     self.pareTable = pareTable(self.tableWidget_pare)
     
     #self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
-    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsmen)
+    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsman)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.drowTable)
-    self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsmen)
-    self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsmen)
+    self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsman)
+    self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsman)
   
   def drowTable(self):
     self.pareTable.clear()
-    for x in self.inputTable.sportsmens:  
-      self.pareTable.addSportsmen(x)
+    for x in self.inputTable.sportsmans:  
+      self.pareTable.addSportsman(x)
       #print("x = ", x)
       #item = QtGui.QTableWidgetItem()
       #item.setText("ololo")
