@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui
+from PyQt4 import QtGui, Qt
 from sportsman import *
 
 class abstractTable():
@@ -32,7 +32,7 @@ class abstractTable():
     for x in range(0, self.table.columnCount()):
       rowList.append(self.getText(row, x))
     return(rowList)
-    
+
   def showSportsman(self, pos, sportsman):
     pass
     
@@ -83,5 +83,12 @@ class pareTable(abstractTable):
         self.table.setItem(num / 2 - 1, 2, name)
         self.table.setItem(num / 2 - 1, 3, last_name)
 
-  def keyPressEvent(self, event):
-    print(event)
+  def __init__(self, table):
+      super().__init__(table)
+
+
+  def setWinner(self):
+      color = Qt.QColor(255, 0, 0, 127)
+      brush = Qt.QBrush()
+      brush.setColor(color)
+      self.table.currentItem().setForeground(brush)

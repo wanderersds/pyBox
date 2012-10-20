@@ -11,13 +11,17 @@ class MainForm(QtGui.QMainWindow):
 
     self.inputTable = inputTable(self.tableWidget)
     self.pareTable = pareTable(self.tableWidget_pare)
+
+    shortcut = QtGui.QShortcut(self.tableWidget_pare)
+    shortcut.setKey(QtGui.QKeySequence("SPACE"))
     
     #self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsman)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.drowTable)
     self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsman)
     self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsman)
-  
+    self.connect(shortcut, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
+
   def drowTable(self):
     self.pareTable.clear()
     for x in self.inputTable.sportsmans:  
