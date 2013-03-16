@@ -10,7 +10,7 @@ class abstractTable():
     self.sportsmans = list()
     if table.rowCount() == 0:
       self.addSportsman()
-  
+
   def clear(self):
     self.table.setRowCount(0)
     del self.sportsmans[:]
@@ -37,45 +37,51 @@ class abstractTable():
     pass
     
   def editSportsman(self, i, j):
-    self.sportsmans[i][keys[j]] = self.table.item(i, j).text()
-    print(self.sportsmans[i])
+    man = session.query(Sportsman).filter(Sportsman.num == i+1).first()
+    man.set(j, self.table.item(i, j).text())
+    session.add(man)
+    session.commit
+
     if self.rowIsFilled(i):
       self.addSportsman()
       
   def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
     if man == -1:
-      man = sportsman() #FTW???
+      man = Sportsman() #FTW???
     if pos == -1:
       pos = self.table.rowCount()
     self.table.insertRow(pos)
-    man["num"] = pos+1
+    man.num = pos+1 
+    session.add(man)
     self.showSportsman(pos, man)
-    self.sportsmans.insert(pos, man)
 
-#    for i in len(self.sportsmans) - pos:
-#      self.sportsmans[i]["num"]+1
+    for instance in session.query(Sportsman).order_by(Sportsman.num)[pos:]:
+      instance.num +1   
+
+    session.commit
     
   def removeSportsman(self):
     row = self.table.currentRow()
     if row > -1:
       self.table.removeRow(row)
-      del self.sportsmans[row]
+      session.query(Sportsman).filter(Sportsman.num==row).delete()
 
-    for i in self.sportsmans[row:]:
-      i["num"]-1
-      
-      
+      for instance in session.query(Sportsman).order_by(Sportsman.num)[row:]:
+        instance.num -1      
+
+      session.commit
+
 class inputTable(abstractTable):
   pass
 
 class pareTable(abstractTable):
   def showSportsman(self, pos, sportsman):
     name = QtGui.QTableWidgetItem()
-    name.setText(sportsman["name"])
+    name.setText(sportsman.name)
     last_name = QtGui.QTableWidgetItem()
-    last_name.setText(sportsman["last_name"])
+    last_name.setText(sportsman.last_name)
 
-    num = sportsman["num"]
+    num = sportsman.num
     if num % 2:
         self.table.setItem(num / 2, 0, name)
         self.table.setItem(num / 2, 1, last_name)
@@ -85,6 +91,11 @@ class pareTable(abstractTable):
 
   def __init__(self, table):
       super().__init__(table)
+
+  def drow(self):
+    self.clear()
+    for instance in session.query(Sportsman).order_by(Sportsman.num):
+      self.addSportsman(instance)
 
 
   def setWinner(self):

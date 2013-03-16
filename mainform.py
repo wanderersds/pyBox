@@ -17,18 +17,11 @@ class MainForm(QtGui.QMainWindow):
     
     #self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.drowTable)
     self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsman)
-    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.drowTable)
+    self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.pareTable.drow)
     self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsman)
     self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsman)
     self.connect(shortcut, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
 
-  def drowTable(self):
-    self.pareTable.clear()
-    for x in self.inputTable.sportsmans:  
-      self.pareTable.addSportsman(x)
-      #print("x = ", x)
-      #item = QtGui.QTableWidgetItem()
-      #item.setText("ololo")
-      #self.pareTable.table.setItem(0,0,item)
+
     
 
