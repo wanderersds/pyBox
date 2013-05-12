@@ -76,18 +76,20 @@ class inputTable(abstractTable):
 
 class pareTable(abstractTable):
   def showSportsman(self, pos, sportsman):
-    name = QtGui.QTableWidgetItem()
-    name.setText(sportsman.name)
-    last_name = QtGui.QTableWidgetItem()
-    last_name.setText(sportsman.last_name)
+    full_name = QtGui.QTableWidgetItem()
+    full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
+    full_name.setText(full_name_text)
+    
+    club = QtGui.QTableWidgetItem()
+    club.setText(sportsman.club)
 
     num = sportsman.num
     if num % 2:
-        self.table.setItem(num / 2, 0, name)
-        self.table.setItem(num / 2, 1, last_name)
+        self.table.setItem(num / 2, 0, full_name)
+        self.table.setItem(num / 2, 1, club)
     else:
-        self.table.setItem(num / 2 - 1, 2, name)
-        self.table.setItem(num / 2 - 1, 3, last_name)
+        self.table.setItem(num / 2 - 1, 2, full_name)
+        self.table.setItem(num / 2 - 1, 3, club)
 
   def __init__(self, table):
       super().__init__(table)

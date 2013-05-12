@@ -52,17 +52,17 @@
               </column>
               <column>
                <property name="text">
+                <string>Клуб</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
                 <string>Вес</string>
                </property>
               </column>
               <column>
                <property name="text">
                 <string>Тренер</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Клуб</string>
                </property>
               </column>
               <column>
@@ -84,7 +84,7 @@
               </property>
               <column>
                <property name="text">
-                <string>Имя</string>
+                <string>Полное имя</string>
                </property>
               </column>
               <column>
@@ -94,7 +94,7 @@
               </column>
               <column>
                <property name="text">
-                <string>Имя</string>
+                <string>Полное имя</string>
                </property>
               </column>
               <column>
@@ -163,7 +163,7 @@
      <x>0</x>
      <y>0</y>
      <width>840</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
   </widget>
