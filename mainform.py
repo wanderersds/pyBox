@@ -9,8 +9,8 @@ class MainForm(QtGui.QMainWindow):
     super(MainForm, self).__init__()
     uic.loadUi("mainform.ui", self)
 
-    self.inputTable = inputTable(self.tableWidget)
     self.pareTable = pareTable(self.tableWidget_pare)
+    self.inputTable = inputTable(self.tableWidget)
 
     shortcut = QtGui.QShortcut(self.tableWidget_pare)
     shortcut.setKey(QtGui.QKeySequence("SPACE"))

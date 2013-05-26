@@ -5,21 +5,21 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, cre
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-keys = ["name", "last_name", "trainer", "born", "weight", "category", "club", "num"]
+keys = [ "name", "last_name", "club", "weight", "trainer", "born", "category", "year" ]
     
 Base = declarative_base()
 
 class Sportsman(Base):
     __tablename__ = 'sportsmans'
-    sportsman_id = Column(Integer, primary_key=True)
-    name         = Column(String(30))
-    last_name    = Column(String(30))
-    trainer      = Column(String(30))
-    born         = Column(String(4))
-    weight       = Column(String(3))    
-    category     = Column(String(10))
-    club         = Column(String(30))
-    year         = Column(Integer)
+    sportsman_id = Column(Integer, primary_key=True, nullable=False)
+    name         = Column(String(30), nullable=False, default='')
+    last_name    = Column(String(30), nullable=False, default='')
+    trainer      = Column(String(30), nullable=False, default='')
+    born         = Column(String(4), nullable=False, default='')
+    weight       = Column(String(3), nullable=False, default='')
+    category     = Column(String(10), nullable=False, default='')
+    club         = Column(String(30), nullable=False, default='')
+    year         = Column(Integer, nullable=False, default='')
     num          = Column(Integer) #, unique=True, autoincrement=True, nullable=False)
     
     def set(self, num, entry ):

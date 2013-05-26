@@ -7,9 +7,9 @@ class abstractTable():
 
   def __init__(self, table):
     self.table = table
-    self.sportsmans = list()
-    if table.rowCount() == 0:
-      self.addSportsman()
+    self.sportsmans = session.query(Sportsman)[:]
+    for man in self.sportsmans:
+      self.addSportsman(man)
 
   def clear(self):
     self.table.setRowCount(0)
@@ -33,9 +33,6 @@ class abstractTable():
       rowList.append(self.getText(row, x))
     return(rowList)
 
-  def showSportsman(self, pos, sportsman):
-    pass
-    
   def editSportsman(self, i, j):
     man = session.query(Sportsman).filter(Sportsman.num == i+1).first()
     man.set(j, self.table.item(i, j).text())
@@ -46,19 +43,24 @@ class abstractTable():
       self.addSportsman()
       
   def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
+    print('BEGIN addSportsman');
     if man == -1:
       man = Sportsman() #FTW???
     if pos == -1:
       pos = self.table.rowCount()
     self.table.insertRow(pos)
     man.num = pos+1 
-    session.add(man)
-    self.showSportsman(pos, man)
 
-    for instance in session.query(Sportsman).order_by(Sportsman.num)[pos:]:
-      instance.num +1   
+    self.showSportsman(pos, man)
+    next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
+    for next_man in next_sportsmans:
+      next_man.num +1 
+    next_sportsmans.append(man)
+    session.add_all(next_sportsmans)  
 
     session.commit
+    print('END addSportsman');
+
     
   def removeSportsman(self):
     row = self.table.currentRow()
@@ -72,10 +74,21 @@ class abstractTable():
       session.commit
 
 class inputTable(abstractTable):
-  pass
+  def showSportsman(self, pos, sportsman):
+    print('BEGIN showSportsman', 'abstract');
+    
+    pos = self.table.rowCount() - 1
+    for i in range( len(keys) ):
+      item = QtGui.QTableWidgetItem()
+      item.setText( str( getattr(sportsman, keys[i]) or '' ) )
+      self.table.setItem(pos, i, item)
+    print('END showSportsman', 'abstract');
+
 
 class pareTable(abstractTable):
   def showSportsman(self, pos, sportsman):
+    print('BEGIN showSportsman', 'pare');
+
     full_name = QtGui.QTableWidgetItem()
     full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
     full_name.setText(full_name_text)
@@ -90,9 +103,8 @@ class pareTable(abstractTable):
     else:
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
+    print('END showSportsman', 'pare');
 
-  def __init__(self, table):
-      super().__init__(table)
 
   def drow(self):
     self.clear()
