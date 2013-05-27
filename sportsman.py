@@ -39,3 +39,7 @@ Base.metadata.create_all(db_engine)
 
 Session = sessionmaker(bind=db_engine)
 session = Session()
+
+def flush():
+    session.commit()
+    session.flush()

@@ -37,13 +37,13 @@ class abstractTable():
     man = session.query(Sportsman).filter(Sportsman.num == i+1).first()
     man.set(j, self.table.item(i, j).text())
     session.add(man)
-    session.commit
 
     if self.rowIsFilled(i):
       self.addSportsman()
+
+    flush()
       
   def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
-    print('BEGIN addSportsman');
     if man == -1:
       man = Sportsman() #FTW???
     if pos == -1:
@@ -57,10 +57,7 @@ class abstractTable():
       next_man.num +1 
     next_sportsmans.append(man)
     session.add_all(next_sportsmans)  
-
-    session.commit
-    print('END addSportsman');
-
+    flush()
     
   def removeSportsman(self):
     row = self.table.currentRow()
@@ -71,24 +68,18 @@ class abstractTable():
       for instance in session.query(Sportsman).order_by(Sportsman.num)[row:]:
         instance.num -1      
 
-      session.commit
+    flush()
 
 class inputTable(abstractTable):
   def showSportsman(self, pos, sportsman):
-    print('BEGIN showSportsman', 'abstract');
-    
     pos = self.table.rowCount() - 1
     for i in range( len(keys) ):
       item = QtGui.QTableWidgetItem()
       item.setText( str( getattr(sportsman, keys[i]) or '' ) )
       self.table.setItem(pos, i, item)
-    print('END showSportsman', 'abstract');
-
 
 class pareTable(abstractTable):
   def showSportsman(self, pos, sportsman):
-    print('BEGIN showSportsman', 'pare');
-
     full_name = QtGui.QTableWidgetItem()
     full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
     full_name.setText(full_name_text)
@@ -103,8 +94,6 @@ class pareTable(abstractTable):
     else:
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
-    print('END showSportsman', 'pare');
-
 
   def drow(self):
     self.clear()
