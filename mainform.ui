@@ -77,33 +77,6 @@
               </column>
              </widget>
             </item>
-            <item>
-             <widget class="QTableWidget" name="tableWidget_pare">
-              <property name="editTriggers">
-               <set>QAbstractItemView::NoEditTriggers</set>
-              </property>
-              <column>
-               <property name="text">
-                <string>Полное имя</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Клуб</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Полное имя</string>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>Клуб</string>
-               </property>
-              </column>
-             </widget>
-            </item>
            </layout>
           </item>
           <item>
@@ -151,7 +124,35 @@
        <attribute name="title">
         <string>Tab 2</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_4"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tableWidget_pare">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <column>
+           <property name="text">
+            <string>Полное имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Клуб</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Полное имя</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Клуб</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -166,8 +167,20 @@
      <height>27</height>
     </rect>
    </property>
+   <widget class="QMenu" name="file">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="save"/>
+   </widget>
+   <addaction name="file"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="save">
+   <property name="text">
+    <string>Сохранить</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

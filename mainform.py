@@ -21,5 +21,11 @@ class MainForm(QtGui.QMainWindow):
         self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsman)
         self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsman)
         self.connect(shortcut, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
-        self.connect(self, QtCore.SIGNAL("destroyed(QObject*)"), flush )
+        self.connect(self.save, QtCore.SIGNAL("activated()"), save )
+        self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.changeTab )
+
+    def changeTab(self, num):
+        session.commit()
+        self.pareTable.drow()
+  
 

@@ -41,7 +41,6 @@ class abstractTable():
     if self.rowIsFilled(i):
       self.addSportsman()
 
-    flush()
       
   def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
     if man == -1:
@@ -55,20 +54,18 @@ class abstractTable():
     next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
     for next_man in next_sportsmans:
       next_man.num +1 
-    next_sportsmans.append(man)
-    session.add_all(next_sportsmans)  
-    flush()
+    session.add_all(next_sportsmans + [man])  
     
   def removeSportsman(self):
-    row = self.table.currentRow()
-    if row > -1:
-      self.table.removeRow(row)
-      session.query(Sportsman).filter(Sportsman.num==row).delete()
+    pos = self.table.currentRow()
+    if pos > -1:
+      session.query(Sportsman).filter(Sportsman.num==pos).delete()
+      self.table.removeRow(pos)
+      next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
+      for next_man in next_sportsmans:
+        next_man.num -1 
+      session.add_all(next_sportsmans) 
 
-      for instance in session.query(Sportsman).order_by(Sportsman.num)[row:]:
-        instance.num -1      
-
-    flush()
 
 class inputTable(abstractTable):
   def showSportsman(self, pos, sportsman):
@@ -94,6 +91,22 @@ class pareTable(abstractTable):
     else:
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
+
+
+  def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
+    if man == -1:
+      man = Sportsman() #FTW???
+    if pos == -1:
+      pos = self.table.rowCount()
+    
+    self.table.insertRow(pos)
+    man.num = pos+1 
+
+    self.showSportsman(pos, man)
+    next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
+    for next_man in next_sportsmans:
+      next_man.num +1 
+    session.add_all(next_sportsmans + [man])
 
   def drow(self):
     self.clear()
