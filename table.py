@@ -80,6 +80,12 @@ class pareTable(abstractTable):
     full_name = QtGui.QTableWidgetItem()
     full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
     full_name.setText(full_name_text)
+
+    if sportsman.winner:
+      color = Qt.QColor(255, 0, 0, 127)
+      brush = Qt.QBrush()
+      brush.setColor(color)
+      full_name.setForeground(brush)
     
     club = QtGui.QTableWidgetItem()
     club.setText(sportsman.club)
@@ -91,7 +97,6 @@ class pareTable(abstractTable):
     else:
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
-
 
   def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
     if man == -1:
@@ -108,14 +113,33 @@ class pareTable(abstractTable):
       next_man.num +1 
     session.add_all(next_sportsmans + [man])
 
-  def drow(self):
+  def drow(self, only_winners=0):
     self.clear()
     for instance in session.query(Sportsman).order_by(Sportsman.num):
-      self.addSportsman(instance)
+      if only_winners == 0 or instance.winner:
+        self.addSportsman(instance)
+
 
 
   def setWinner(self):
-      color = Qt.QColor(255, 0, 0, 127)
-      brush = Qt.QBrush()
-      brush.setColor(color)
-      self.table.currentItem().setForeground(brush)
+      stroka  = self.table.currentItem().row()
+      kolonka = self.table.currentItem().column()
+      if kolonka > 1:
+        kolonka = 2
+      else:
+        kolonka = 1
+      winner_num = stroka * 2 + kolonka
+
+      if winner_num % 2:
+        looser_num = winner_num + 1
+      else:
+        looser_num = winner_num - 1
+
+      winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
+      winner.winner = 1
+      looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
+      looser.winner = 0
+      print(looser.name)
+      session.add_all( [winner, looser] )
+      
+      self.drow()

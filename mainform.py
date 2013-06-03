@@ -23,9 +23,11 @@ class MainForm(QtGui.QMainWindow):
         self.connect(shortcut, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
         self.connect(self.save, QtCore.SIGNAL("activated()"), save )
         self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.changeTab )
+        self.connect(self.nextButton, QtCore.SIGNAL("clicked()"), self.next_round )
 
     def changeTab(self, num):
         session.commit()
         self.pareTable.drow()
   
-
+    def next_round(self):
+        self.pareTable.drow(1)

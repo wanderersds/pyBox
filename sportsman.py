@@ -20,8 +20,9 @@ class Sportsman(Base):
     category     = Column(String(10), nullable=False, default='')
     club         = Column(String(30), nullable=False, default='')
     year         = Column(Integer, nullable=False, default='')
-    num          = Column(Integer) #, unique=True, autoincrement=True, nullable=False)
-    
+    num          = Column(Integer, nullable=False)
+    winner       = Column(Integer)
+
     def set(self, num, entry ):
         if num == 0: self.name      = entry
         if num == 1: self.last_name = entry   
