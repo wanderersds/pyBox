@@ -21,6 +21,7 @@ class Sportsman(Base):
     club         = Column(String(30), nullable=False, default='')
     year         = Column(Integer, nullable=False, default='')
     num          = Column(Integer, nullable=False)
+    dropped      = Column(Integer, nullable=False, default=0)
     winner       = Column(Integer)
 
     def set(self, num, entry ):

@@ -24,10 +24,21 @@ class MainForm(QtGui.QMainWindow):
         self.connect(self.save, QtCore.SIGNAL("activated()"), save )
         self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.changeTab )
         self.connect(self.nextButton, QtCore.SIGNAL("clicked()"), self.next_round )
+        self.connect(self.resetButton, QtCore.SIGNAL("clicked()"), self.reset_round )
+        self.connect(self.about, QtCore.SIGNAL("activated()"), self.show_about )
 
     def changeTab(self, num):
         session.commit()
         self.pareTable.drow()
   
     def next_round(self):
-        self.pareTable.drow(1)
+        self.lcdNumber.display(self.lcdNumber.intValue() + 1)
+        self.pareTable.drow('only_winners')
+
+    def reset_round(self):
+        self.lcdNumber.display(0)
+        self.pareTable.current_round = 0
+        self.pareTable.drow()        
+
+    def show_about(self):
+        QtGui.QDialog.show(self, 'test')

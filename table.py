@@ -35,8 +35,9 @@ class abstractTable():
 
   def editSportsman(self, i, j):
     man = session.query(Sportsman).filter(Sportsman.num == i+1).first()
-    man.set(j, self.table.item(i, j).text())
-    session.add(man)
+    if man:
+      man.set(j, self.table.item(i, j).text())
+      session.add(man)
 
     if self.rowIsFilled(i):
       self.addSportsman()
@@ -76,6 +77,8 @@ class inputTable(abstractTable):
       self.table.setItem(pos, i, item)
 
 class pareTable(abstractTable):
+  current_round = 0
+
   def showSportsman(self, pos, sportsman):
     full_name = QtGui.QTableWidgetItem()
     full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
@@ -114,11 +117,25 @@ class pareTable(abstractTable):
     session.add_all(next_sportsmans + [man])
 
   def drow(self, only_winners=0):
+    if only_winners:
+      self.current_round += 1
+
+    if self.current_round == 0:
+      for instance in session.query(Sportsman).order_by(Sportsman.num):
+        instance.dropped = 0
+        session.add(instance)
+
     self.clear()
+    num = 0
     for instance in session.query(Sportsman).order_by(Sportsman.num):
       if only_winners == 0 or instance.winner:
-        self.addSportsman(instance)
-
+        if self.current_round == 0 or instance.dropped == 0:
+          num += 1
+          instance.num = num
+          self.addSportsman(instance)
+      else:
+        instance.num = 0
+        instance.dropped = 1
 
 
   def setWinner(self):
