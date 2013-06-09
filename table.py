@@ -121,21 +121,21 @@ class pareTable(abstractTable):
       self.current_round += 1
 
     if self.current_round == 0:
-      for instance in session.query(Sportsman).order_by(Sportsman.num):
-        instance.dropped = 0
-        session.add(instance)
+      for man in session.query(Sportsman).order_by(Sportsman.num):
+        man.dropped = 0
+        session.add(man)
 
     self.clear()
     num = 0
-    for instance in session.query(Sportsman).order_by(Sportsman.num):
-      if only_winners == 0 or instance.winner:
-        if self.current_round == 0 or instance.dropped == 0:
+    for man in session.query(Sportsman).order_by(Sportsman.num):
+      if only_winners == 0 or man.winner:
+        if self.current_round == 0 or man.dropped == 0:
           num += 1
-          instance.num = num
-          self.addSportsman(instance)
+          man.num = num
+          self.addSportsman(man)
       else:
-        instance.num = 0
-        instance.dropped = 1
+        man.num = 0
+        man.dropped = 1
 
 
   def setWinner(self):
