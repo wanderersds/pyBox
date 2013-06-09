@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>840</width>
+    <width>842</width>
     <height>600</height>
    </rect>
   </property>
@@ -85,7 +85,7 @@
               </column>
               <column>
                <property name="text">
-                <string>Раздел</string>
+                <string>Примечание</string>
                </property>
               </column>
               <column>
@@ -128,7 +128,7 @@
             <item>
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Количество спортсменов</string>
               </property>
              </widget>
             </item>
@@ -256,7 +256,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>840</width>
+     <width>842</width>
      <height>27</height>
     </rect>
    </property>
