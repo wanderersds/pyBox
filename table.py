@@ -34,7 +34,7 @@ class abstractTable():
     return(rowList)
 
   def editSportsman(self, i, j):
-    man = session.query(Sportsman).filter(Sportsman.num == i+1).first()
+    man = session.query(Sportsman).filter(Sportsman.sportsman_id == i+1).first()
     if man:
       man.set(j, self.table.item(i, j).text())
       session.add(man)
@@ -43,9 +43,9 @@ class abstractTable():
       self.addSportsman()
 
       
-  def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
+  def addSportsman(self, man = -1, pos = -1):
     if man == -1:
-      man = Sportsman() #FTW???
+      man = Sportsman()
     if pos == -1:
       pos = self.table.rowCount()
     self.table.insertRow(pos)
@@ -113,7 +113,7 @@ class pareTable(abstractTable):
     self.showSportsman(pos, man)
     next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
     for next_man in next_sportsmans:
-      next_man.num +1 
+      next_man.num += 1 
     session.add_all(next_sportsmans + [man])
 
   def drow(self, only_winners=0):
@@ -125,13 +125,15 @@ class pareTable(abstractTable):
         man.dropped = 0
         session.add(man)
 
-    self.clear()
-    num = 0
+    self.table.setRowCount(0)
+    num = 1
     for man in session.query(Sportsman).order_by(Sportsman.num):
       if only_winners == 0 or man.winner:
         if self.current_round == 0 or man.dropped == 0:
-          num += 1
+          print("number: ", num, " name: ", man.name)
           man.num = num
+          num += 1
+          session.add(man)
           self.addSportsman(man)
       else:
         man.num = 0
@@ -151,7 +153,17 @@ class pareTable(abstractTable):
         looser_num = winner_num + 1
       else:
         looser_num = winner_num - 1
-
+      if self.current_round == 0:
+        winner_num += 1
+        looser_num += 1
+      # print("winer: ", winner_num) 
+      # print("looser: ", looser_num)
+      # for man in session.query(Sportsman).order_by(Sportsman.num):
+        # print(man.num)
+        # man.num -= 1
+        # session.add(man) 
+      print("winner: ", winner_num)
+      print("looser: ", looser_num)
       winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
       winner.winner = 1
       looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
