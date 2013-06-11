@@ -151,7 +151,6 @@ class pareTable(abstractTable):
       winner.winner = 1
       looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
       looser.winner = 0
-      print(looser.name)
       session.add_all( [winner, looser] )
       
       self.drow()
