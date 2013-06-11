@@ -5,12 +5,6 @@ from sportsman import *
 
 class abstractTable():
 
-  def __init__(self, table):
-    self.table = table
-    self.sportsmans = session.query(Sportsman)[:]
-    for man in self.sportsmans:
-      self.addSportsman(man)
-
   def clear(self):
     self.table.setRowCount(0)
     del self.sportsmans[:]
@@ -33,6 +27,30 @@ class abstractTable():
       rowList.append(self.getText(row, x))
     return(rowList)
 
+  def removeSportsman(self):
+    pos = self.table.currentRow()
+    if pos > -1:
+      session.query(Sportsman).filter(Sportsman.num==pos).delete()
+      self.table.removeRow(pos)
+      next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
+      for next_man in next_sportsmans:
+        next_man.num -1 
+      session.add_all(next_sportsmans) 
+
+class inputTable(abstractTable):
+  def __init__(self, table):
+    self.table = table
+    self.sportsmans = session.query(Sportsman)[:]
+    for man in self.sportsmans:
+      self.addSportsman(man)
+
+  def showSportsman(self, pos, sportsman):
+    pos = self.table.rowCount() - 1
+    for i in range( len(keys) ):
+      item = QtGui.QTableWidgetItem()
+      item.setText( str( getattr(sportsman, keys[i]) or '' ) )
+      self.table.setItem(pos, i, item)
+
   def editSportsman(self, i, j):
     man = session.query(Sportsman).filter(Sportsman.sportsman_id == i+1).first()
     if man:
@@ -42,7 +60,6 @@ class abstractTable():
     if self.rowIsFilled(i):
       self.addSportsman()
 
-      
   def addSportsman(self, man = -1, pos = -1):
     if man == -1:
       man = Sportsman()
@@ -56,30 +73,18 @@ class abstractTable():
     for next_man in next_sportsmans:
       next_man.num +1 
     session.add_all(next_sportsmans + [man])  
-    
-  def removeSportsman(self):
-    pos = self.table.currentRow()
-    if pos > -1:
-      session.query(Sportsman).filter(Sportsman.num==pos).delete()
-      self.table.removeRow(pos)
-      next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
-      for next_man in next_sportsmans:
-        next_man.num -1 
-      session.add_all(next_sportsmans) 
-
-
-class inputTable(abstractTable):
-  def showSportsman(self, pos, sportsman):
-    pos = self.table.rowCount() - 1
-    for i in range( len(keys) ):
-      item = QtGui.QTableWidgetItem()
-      item.setText( str( getattr(sportsman, keys[i]) or '' ) )
-      self.table.setItem(pos, i, item)
 
 class pareTable(abstractTable):
   current_round = 0
+  
+  def __init__(self, table):
+    self.table = table
+    self.sportsmans = session.query(Sportsman)[:]
+    for man in self.sportsmans:
+      self.showSportsman(man)
+    self.drow()
 
-  def showSportsman(self, pos, sportsman):
+  def showSportsman(self, sportsman):
     full_name = QtGui.QTableWidgetItem()
     full_name_text = (sportsman.name or '') + ' ' + (sportsman.last_name or '')
     full_name.setText(full_name_text)
@@ -92,29 +97,15 @@ class pareTable(abstractTable):
     
     club = QtGui.QTableWidgetItem()
     club.setText(sportsman.club)
-
+    
     num = sportsman.num
+    self.table.insertRow(self.table.rowCount())
     if num % 2:
         self.table.setItem(num / 2, 0, full_name)
         self.table.setItem(num / 2, 1, club)
     else:
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
-
-  def addSportsman(self, man = -1, pos = -1): #NameError: name 'self' is not defined
-    if man == -1:
-      man = Sportsman() #FTW???
-    if pos == -1:
-      pos = self.table.rowCount()
-    
-    self.table.insertRow(pos)
-    man.num = pos+1 
-
-    self.showSportsman(pos, man)
-    next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
-    for next_man in next_sportsmans:
-      next_man.num += 1 
-    session.add_all(next_sportsmans + [man])
 
   def drow(self, only_winners=0):
     if only_winners:
@@ -134,7 +125,7 @@ class pareTable(abstractTable):
           man.num = num
           num += 1
           session.add(man)
-          self.addSportsman(man)
+          self.showSportsman(man)
       else:
         man.num = 0
         man.dropped = 1
@@ -153,15 +144,7 @@ class pareTable(abstractTable):
         looser_num = winner_num + 1
       else:
         looser_num = winner_num - 1
-      if self.current_round == 0:
-        winner_num += 1
-        looser_num += 1
-      # print("winer: ", winner_num) 
-      # print("looser: ", looser_num)
-      # for man in session.query(Sportsman).order_by(Sportsman.num):
-        # print(man.num)
-        # man.num -= 1
-        # session.add(man) 
+
       print("winner: ", winner_num)
       print("looser: ", looser_num)
       winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
