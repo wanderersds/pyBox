@@ -15,7 +15,7 @@ class Sportsman(Base):
     name         = Column(String(30), nullable=False, default='')
     last_name    = Column(String(30), nullable=False, default='')
     trainer      = Column(String(30), nullable=False, default='')
-    born         = Column(String(4), nullable=False, default='')
+    born         = Column(String(4),  nullable=False, default='')
     weight       = Column(Integer(3), nullable=False, default=0)
     category     = Column(String(10), nullable=False, default='')
     club         = Column(String(30), nullable=False, default='')

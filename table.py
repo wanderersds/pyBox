@@ -3,7 +3,7 @@
 from PyQt4 import QtGui, Qt
 from sportsman import *
 
-filter_map = [ [999, 91], #super_heavy 
+filter_map = [ [91, 999], #super_heavy 
                [81,  91], #heavy 
                [75,  81], #light_heavy 
                [69,  75], #middle 
@@ -47,7 +47,8 @@ class abstractTable():
       next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
       for next_man in next_sportsmans:
         next_man.num -1 
-      session.add_all(next_sportsmans) 
+      session.add_all(next_sportsmans)
+      session.commit() 
 
 class inputTable(abstractTable):
   def __init__(self, table):
@@ -68,6 +69,7 @@ class inputTable(abstractTable):
     if man:
       man.set(j, self.table.item(i, j).text())
       session.add(man)
+      session.commit()
 
     if self.rowIsFilled(i):
       self.addSportsman()
@@ -85,6 +87,7 @@ class inputTable(abstractTable):
     for next_man in next_sportsmans:
       next_man.num +1 
     session.add_all(next_sportsmans + [man])
+    session.commit()
 
   def countByCategory(self):
     count_by_category = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -95,14 +98,8 @@ class inputTable(abstractTable):
     return count_by_category
 
 class pareTable(abstractTable):
-  current_round = 0
-  filter_index  = None
-
-  def weight_filter(self):
-    if type(self.filter_index) is int:
-      return range( *filter_map[ self.filter_index ] )
-    else:
-      return range(1, 999)
+  current_rounds = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  filter_index   = 0
 
   def __init__(self, table):
     self.table = table
@@ -126,8 +123,8 @@ class pareTable(abstractTable):
     club.setText(sportsman.club)
     
     num = sportsman.num
-    self.table.insertRow(self.table.rowCount())
     if num % 2:
+        self.table.insertRow(self.table.rowCount())
         self.table.setItem(num / 2, 0, full_name)
         self.table.setItem(num / 2, 1, club)
     else:
@@ -135,26 +132,26 @@ class pareTable(abstractTable):
         self.table.setItem(num / 2 - 1, 3, club)
 
   def drow(self, only_winners=0):
-    if only_winners:
-      self.current_round += 1
-
-    if self.current_round == 0:
+    if self.current_rounds[ self.filter_index ] == 0:
       for man in session.query(Sportsman).order_by(Sportsman.num):
         man.dropped = 0
         session.add(man)
+        session.commit()
 
     self.table.setRowCount(0)
     num = 1
+    weight_filter = range( *filter_map[ self.filter_index ] )
     query = session.query(Sportsman).\
             order_by(Sportsman.num).\
-            filter(Sportsman.weight.in_( self.weight_filter() ))
+            filter(Sportsman.weight.in_( weight_filter ))
     
     for man in query:
       if only_winners == 0 or man.winner:
-        if self.current_round == 0 or man.dropped == 0:
+        if self.current_rounds[ self.filter_index ] == 0 or man.dropped == 0:
           man.num = num
           num += 1
           session.add(man)
+          session.commit()
           self.showSportsman(man)
       else:
         man.num = 0
@@ -162,8 +159,8 @@ class pareTable(abstractTable):
 
 
   def setWinner(self):
-      stroka  = self.table.currentItem().row()
-      kolonka = self.table.currentItem().column()
+      stroka  = self.table.currentRow()
+      kolonka = self.table.currentColumn()
       if kolonka > 1:
         kolonka = 2
       else:
@@ -176,9 +173,13 @@ class pareTable(abstractTable):
         looser_num = winner_num - 1
 
       winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
-      winner.winner = 1
+      if winner:
+        winner.winner = 1
+        session.add(winner)
       looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
-      looser.winner = 0
-      session.add_all( [winner, looser] )
+      if looser:
+        looser.winner = 0
+        session.add(looser)
+      session.commit()
       
       self.drow()

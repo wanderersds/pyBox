@@ -41,24 +41,38 @@ class MainForm(QtGui.QMainWindow):
         
     def apply_filter(self, category):
         self.pareTable.filter_index = category
+        self.lcdNumber.display( self.pareTable.current_rounds[ self.pareTable.filter_index ] )
         self.pareTable.drow()
+        self.enable_next_round()
 
     def changeTab(self, num):
-        session.commit()
         count_by_category = self.inputTable.countByCategory()
         for i in range(10):
             label = getattr(self, 'label_' + str(i))
             label.setNum( count_by_category[i] )
         self.pareTable.drow()
+        self.enable_next_round()
   
     def next_round(self):
-        self.lcdNumber.display(self.lcdNumber.intValue() + 1)
+        self.pareTable.current_rounds[ self.pareTable.filter_index ] += 1
+        self.lcdNumber.display( self.pareTable.current_rounds[ self.pareTable.filter_index ] )
         self.pareTable.drow('only_winners')
+        self.enable_next_round()
+
 
     def reset_round(self):
         self.lcdNumber.display(0)
-        self.pareTable.current_round = 0
-        self.pareTable.drow()        
+        self.pareTable.current_rounds[ self.pareTable.filter_index ] = 0
+        self.pareTable.drow(only_winners=0)
+        self.enable_next_round()        
 
     def show_about(self):
-        QtGui.QDialog.show(self, 'test')
+        dialog = QtGui.QDialog()
+        uic.loadUi("about.ui", dialog)
+        dialog.exec()
+
+    def enable_next_round(self):
+        if self.tableWidget_pare.rowCount() > 1:
+            self.nextButton.setEnabled(1)
+        else:
+            self.nextButton.setEnabled(0)

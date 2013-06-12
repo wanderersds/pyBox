@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1158</width>
+    <width>1188</width>
     <height>600</height>
    </rect>
   </property>
@@ -229,6 +229,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="nextButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Следуюший</string>
               </property>
@@ -256,7 +259,7 @@
           <property name="title">
            <string>Категория</string>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <property name="geometry">
             <rect>
              <x>3</x>
@@ -492,7 +495,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1158</width>
+     <width>1188</width>
      <height>27</height>
     </rect>
    </property>
