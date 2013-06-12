@@ -3,6 +3,18 @@
 from PyQt4 import QtGui, Qt
 from sportsman import *
 
+filter_map = [ [999, 91], #super_heavy 
+               [81,  91], #heavy 
+               [75,  81], #light_heavy 
+               [69,  75], #middle 
+               [64,  69], #welter 
+               [60,  64], #light_welter
+               [56,  60], #light
+               [52,  56], #bantam
+               [49,  52], #fly
+               [46,  49], #light_fly
+             ];
+
 class abstractTable():
 
   def clear(self):
@@ -72,11 +84,26 @@ class inputTable(abstractTable):
     next_sportsmans = session.query(Sportsman).order_by(Sportsman.num)[pos:]
     for next_man in next_sportsmans:
       next_man.num +1 
-    session.add_all(next_sportsmans + [man])  
+    session.add_all(next_sportsmans + [man])
+
+  def countByCategory(self):
+    count_by_category = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    for man in session.query(Sportsman):
+      for category in range( len(count_by_category) ):
+        if man.weight in range( *filter_map[ category ] ):
+          count_by_category[ category ] +=1
+    return count_by_category
 
 class pareTable(abstractTable):
   current_round = 0
-  
+  filter_index  = None
+
+  def weight_filter(self):
+    if type(self.filter_index) is int:
+      return range( *filter_map[ self.filter_index ] )
+    else:
+      return range(1, 999)
+
   def __init__(self, table):
     self.table = table
     self.sportsmans = session.query(Sportsman)[:]
@@ -118,10 +145,13 @@ class pareTable(abstractTable):
 
     self.table.setRowCount(0)
     num = 1
-    for man in session.query(Sportsman).order_by(Sportsman.num):
+    query = session.query(Sportsman).\
+            order_by(Sportsman.num).\
+            filter(Sportsman.weight.in_( self.weight_filter() ))
+    
+    for man in query:
       if only_winners == 0 or man.winner:
         if self.current_round == 0 or man.dropped == 0:
-          print("number: ", num, " name: ", man.name)
           man.num = num
           num += 1
           session.add(man)

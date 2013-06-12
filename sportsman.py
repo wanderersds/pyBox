@@ -16,7 +16,7 @@ class Sportsman(Base):
     last_name    = Column(String(30), nullable=False, default='')
     trainer      = Column(String(30), nullable=False, default='')
     born         = Column(String(4), nullable=False, default='')
-    weight       = Column(String(3), nullable=False, default='')
+    weight       = Column(Integer(3), nullable=False, default=0)
     category     = Column(String(10), nullable=False, default='')
     club         = Column(String(30), nullable=False, default='')
     year         = Column(Integer, nullable=False, default='')
@@ -33,7 +33,6 @@ class Sportsman(Base):
         if num == 5: self.born      = entry   
         if num == 6: self.category  = entry 
         if num == 7: self.year      = entry 
-        # if num == : self.num       = entry 
 
 # db_engine = create_engine('postgresql:///pyBox.db', echo=True)
 db_engine = create_engine('sqlite:///pyBox.db', echo=False)
