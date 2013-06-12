@@ -44,10 +44,9 @@ class MainForm(QtGui.QMainWindow):
         self.pareTable.drow()
 
     def changeTab(self, num):
-        session.commit() #???
+        session.commit()
         count_by_category = self.inputTable.countByCategory()
-        print(count_by_category)
-        for i in range(8):
+        for i in range(10):
             label = getattr(self, 'label_' + str(i))
             label.setNum( count_by_category[i] )
         self.pareTable.drow()

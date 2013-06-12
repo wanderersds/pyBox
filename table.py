@@ -87,7 +87,7 @@ class inputTable(abstractTable):
     session.add_all(next_sportsmans + [man])
 
   def countByCategory(self):
-    count_by_category = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    count_by_category = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     for man in session.query(Sportsman):
       for category in range( len(count_by_category) ):
         if man.weight in range( *filter_map[ category ] ):
@@ -175,8 +175,6 @@ class pareTable(abstractTable):
       else:
         looser_num = winner_num - 1
 
-      print("winner: ", winner_num)
-      print("looser: ", looser_num)
       winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
       winner.winner = 1
       looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
