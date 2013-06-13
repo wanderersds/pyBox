@@ -48,7 +48,6 @@ class abstractTable():
       for next_man in next_sportsmans:
         next_man.num -1 
       session.add_all(next_sportsmans)
-      session.commit() 
 
 class inputTable(abstractTable):
   def __init__(self, table):
@@ -69,7 +68,6 @@ class inputTable(abstractTable):
     if man:
       man.set(j, self.table.item(i, j).text())
       session.add(man)
-      session.commit()
 
     if self.rowIsFilled(i):
       self.addSportsman()
@@ -87,7 +85,6 @@ class inputTable(abstractTable):
     for next_man in next_sportsmans:
       next_man.num +1 
     session.add_all(next_sportsmans + [man])
-    session.commit()
 
   def countByCategory(self):
     count_by_category = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -131,12 +128,15 @@ class pareTable(abstractTable):
         self.table.setItem(num / 2 - 1, 2, full_name)
         self.table.setItem(num / 2 - 1, 3, club)
 
-  def drow(self, only_winners=0):
+  def drow(self, only_winners=-1):
+    if only_winners == -1:
+      only_winners = self.current_rounds[ self.filter_index ]
+
+
     if self.current_rounds[ self.filter_index ] == 0:
       for man in session.query(Sportsman).order_by(Sportsman.num):
         man.dropped = 0
         session.add(man)
-        session.commit()
 
     self.table.setRowCount(0)
     num = 1
@@ -151,7 +151,6 @@ class pareTable(abstractTable):
           man.num = num
           num += 1
           session.add(man)
-          session.commit()
           self.showSportsman(man)
       else:
         man.num = 0
@@ -161,6 +160,7 @@ class pareTable(abstractTable):
   def setWinner(self):
       stroka  = self.table.currentRow()
       kolonka = self.table.currentColumn()
+      weight_filter = range( *filter_map[ self.filter_index ] )
       if kolonka > 1:
         kolonka = 2
       else:
@@ -172,14 +172,22 @@ class pareTable(abstractTable):
       else:
         looser_num = winner_num - 1
 
-      winner = session.query(Sportsman).filter(Sportsman.num==winner_num).first()
+      winner = session.query(Sportsman).\
+                  filter(Sportsman.num==winner_num).\
+                  filter(Sportsman.weight.in_( weight_filter )).\
+                  first()
       if winner:
         winner.winner = 1
         session.add(winner)
-      looser = session.query(Sportsman).filter(Sportsman.num==looser_num).first()
+      looser = session.query(Sportsman).\
+                filter(Sportsman.num==looser_num).\
+                filter(Sportsman.weight.in_( weight_filter )).\
+                first()
       if looser:
+        print(looser.name)
+
         looser.winner = 0
+        looser.dropped = 1
         session.add(looser)
-      session.commit()
-      
+
       self.drow()

@@ -46,12 +46,13 @@ class MainForm(QtGui.QMainWindow):
         self.enable_next_round()
 
     def changeTab(self, num):
-        count_by_category = self.inputTable.countByCategory()
-        for i in range(10):
-            label = getattr(self, 'label_' + str(i))
-            label.setNum( count_by_category[i] )
-        self.pareTable.drow()
-        self.enable_next_round()
+        if num:
+            count_by_category = self.inputTable.countByCategory()
+            for i in range(10):
+                label = getattr(self, 'label_' + str(i))
+                label.setNum( count_by_category[i] )
+            self.pareTable.drow()
+            self.enable_next_round()
   
     def next_round(self):
         self.pareTable.current_rounds[ self.pareTable.filter_index ] += 1
