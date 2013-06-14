@@ -158,14 +158,14 @@ class pareTable(abstractTable):
 
 
   def setWinner(self):
-      stroka  = self.table.currentRow()
-      kolonka = self.table.currentColumn()
+      row  = self.table.currentRow()
+      column = self.table.currentColumn()
       weight_filter = range( *filter_map[ self.filter_index ] )
-      if kolonka > 1:
-        kolonka = 2
+      if column > 1:
+        column = 2
       else:
-        kolonka = 1
-      winner_num = stroka * 2 + kolonka
+        column = 1
+      winner_num = row * 2 + column
 
       if winner_num % 2:
         looser_num = winner_num + 1
@@ -190,4 +190,4 @@ class pareTable(abstractTable):
         looser.dropped = 1
         session.add(looser)
 
-      self.drow()
+      self.drow(only_winners=0)
