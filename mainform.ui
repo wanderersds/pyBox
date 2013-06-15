@@ -512,7 +512,21 @@
     </property>
     <addaction name="about"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Вид</string>
+    </property>
+    <addaction name="full_screen"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>Участник</string>
+    </property>
+    <addaction name="set_winner"/>
+   </widget>
    <addaction name="file"/>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
    <addaction name="help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -537,6 +551,28 @@
     <string>F1</string>
    </property>
   </action>
+  <action name="full_screen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Полный экран</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
+  <action name="set_winner">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Отметить победителя</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -551,7 +587,7 @@
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>419</x>
+     <x>593</x>
      <y>299</y>
     </hint>
    </hints>

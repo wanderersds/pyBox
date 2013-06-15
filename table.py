@@ -111,10 +111,10 @@ class pareTable(abstractTable):
     full_name.setText(full_name_text)
 
     if sportsman.winner:
-      color = Qt.QColor(255, 0, 0, 127)
+      color = Qt.QColor(20, 200, 127, 248)
       brush = Qt.QBrush()
       brush.setColor(color)
-      full_name.setForeground(brush)
+      full_name.setBackground(color)
     
     club = QtGui.QTableWidgetItem()
     club.setText(sportsman.club)

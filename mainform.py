@@ -24,21 +24,25 @@ class MainForm(QtGui.QMainWindow):
         self.buttonGroup.addButton(self.rbutton8, 8)
         self.buttonGroup.addButton(self.rbutton9, 9)
 
-        shortcut = QtGui.QShortcut(self.tableWidget_pare)
-        shortcut.setKey(QtGui.QKeySequence("SPACE"))
-
         self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.inputTable.editSportsman)
         self.connect(self.tableWidget, QtCore.SIGNAL("cellChanged(int, int)"), self.pareTable.drow)
         self.connect(self.toolButton_Plus, QtCore.SIGNAL("clicked()"), self.inputTable.addSportsman)
         self.connect(self.toolButton_Minus, QtCore.SIGNAL("clicked()"), self.inputTable.removeSportsman)
-        self.connect(shortcut, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
+        self.connect(self.set_winner, QtCore.SIGNAL("activated()"), self.pareTable.setWinner)
         self.connect(self.save, QtCore.SIGNAL("activated()"), save )
         self.connect(self.tabWidget, QtCore.SIGNAL("currentChanged(int)"), self.changeTab )
         self.connect(self.nextButton, QtCore.SIGNAL("clicked()"), self.next_round )
         self.connect(self.resetButton, QtCore.SIGNAL("clicked()"), self.reset_round )
         self.connect(self.about, QtCore.SIGNAL("activated()"), self.show_about )
+        self.connect(self.full_screen, QtCore.SIGNAL("triggered(bool)"), self.trigger_view )
         self.connect(self.buttonGroup, QtCore.SIGNAL("buttonPressed(int)"), self.apply_filter )
-        
+    
+    def trigger_view(self, full_screen):
+        if full_screen:
+            self.showFullScreen()
+        else:
+            self.showNormal()    
+
     def apply_filter(self, category):
         self.pareTable.filter_index = category
         self.lcdNumber.display( self.pareTable.current_rounds[ self.pareTable.filter_index ] )
@@ -53,6 +57,7 @@ class MainForm(QtGui.QMainWindow):
                 label.setNum( count_by_category[i] )
             self.pareTable.drow()
             self.enable_next_round()
+        self.set_winner.setEnabled(num)
   
     def next_round(self):
         self.pareTable.current_rounds[ self.pareTable.filter_index ] += 1
